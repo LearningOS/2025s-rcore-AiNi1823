@@ -143,7 +143,7 @@ impl TaskManager {
         inner.tasks[current].sys_call_num[syscall_id] += 1;
     }
 
-    fn get_syscall_num(&self, syscall_id: usize) -> usize {
+    fn get_syscall_num(&self, syscall_id: usize) -> u8 {
         let inner = self.inner.exclusive_access();
         let current: usize = inner.current_task;
         inner.tasks[current].sys_call_num[syscall_id]
@@ -177,7 +177,7 @@ pub fn add_syscall_num(syscall_id: usize) {
 }
 
 /// Get the current task calls number
-pub fn get_syscall_num(syscall_id: usize) -> usize {
+pub fn get_syscall_num(syscall_id: usize) -> u8 {
     let num = TASK_MANAGER.get_syscall_num(syscall_id);
     num 
 }

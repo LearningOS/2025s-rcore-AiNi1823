@@ -3,6 +3,7 @@ use crate::{
     task::{exit_current_and_run_next, get_syscall_num, suspend_current_and_run_next},
     timer::get_time_us,
 };
+use core::ptr::{read_volatile,write_volatile};
 
 #[repr(C)]
 #[derive(Debug)]
@@ -39,11 +40,18 @@ pub fn sys_get_time(ts: *mut TimeVal, _tz: usize) -> isize {
 }
 
 // TODO: implement the syscall
-pub fn sys_trace(trace_request: usize, id: usize, _data: usize) -> isize {
+pub fn sys_trace(trace_request: usize, id: usize, data: usize) -> isize {
     trace!("kernel: sys_trace");
     match trace_request {
-        0 => id as isize,
-        1 => 0,
+        0 => {
+            let addr = id as *const u8;
+            unsafe { read_volatile(addr) as isize }
+        }
+        1 => {
+            let addr = id as *mut u8;
+            unsafe { write_volatile(addr, data as u8) };
+            0
+        }
         2 => get_syscall_num(id) as isize,
         _ => {
             // Handle unsupported trace requests

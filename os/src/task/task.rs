@@ -11,7 +11,7 @@ pub struct TaskControlBlock {
     /// The task context
     pub task_cx: TaskContext,
     /// The task calls number
-    pub sys_call_num: [usize; MAX_CALL_NUM],
+    pub sys_call_num: [u8; MAX_CALL_NUM],
 }
 
 /// The status of a task
